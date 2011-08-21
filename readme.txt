@@ -6,7 +6,7 @@ Requires at least: 3.0
 Tested up to: 3.2.1
 Stable tag: trunk
 
-Enables a sticky checkbox on the admin add/edit page of custom post types which will allow the user to stick custom post type entries to the front page.
+Enables a sticky checkbox on the custom post type add/edit page which will allow the user to stick custom post type entries to the front page.
 
 == Description ==
 
