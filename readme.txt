@@ -12,13 +12,13 @@ Enables a sticky checkbox on the custom post type add/edit page which will allow
 
 This plugin enables sticky post support on custom post types by adding a "Stick this to the front page" checkbox on the admin add/edit page of selected custom post types.
 
-Select custom post types in Settings → Writing.
+Set custom post types to enable in Settings → Writing.
 
 == Installation ==
 
 1. Upload `sticky-custom-post-types.php` to the `/wp-content/plugins/` directory.
 2. Activate the plugin through the 'Plugins' menu in WordPress.
-3. Navigate to 'Settings → General' and select custom post types to enable.
+3. Navigate to 'Settings → Writing' and select custom post types to enable.
 
 == Frequently Asked Questions ==
 
