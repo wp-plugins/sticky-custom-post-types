@@ -2,8 +2,8 @@
 /*
 Plugin Name: Sticky Custom Post Types
 Plugin URI: http://superann.com/sticky-custom-post-types/
-Description: Enables a sticky checkbox on the admin add/edit page of custom post types which will allow the user to stick custom post type entries to the front page. Select custom post types in Settings &rarr; Writing.
-Version: 1.1
+Description: Enables support for sticky custom post types. Set options in Settings &rarr; Reading.
+Version: 1.2
 Author: Ann Oyama
 Author URI: http://superann.com
 License: GPL2
@@ -26,30 +26,42 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
 function super_sticky_description() {
-	echo '<p>'.__('Enable selected custom post types to stick to the front page.').'</p>';
+	echo '<p>'.__('Enable support for sticky custom post types.').'</p>';
 }
 
-function super_sticky_settings() {
+function super_sticky_set_post_types() {
 	$post_types = get_post_types(array('_builtin' => false, 'public' => true), 'names');
 	if(!empty($post_types)) {
-		$checked_post_types = super_sticky_get();
+		$checked_post_types = super_sticky_post_types();
 		foreach($post_types as $post_type) { ?>
-			<span><input type="checkbox" id="post_type_<?php echo $post_type; ?>" name="sticky_custom_post_types[]" value="<?php echo $post_type; ?>" <?php checked(in_array($post_type, $checked_post_types)); ?> /> <label for="post_type_<?php echo $post_type; ?>"><?php echo $post_type; ?></label></span><br/><?php
+			<div><input type="checkbox" id="post_type_<?php echo $post_type; ?>" name="sticky_custom_post_types[]" value="<?php echo $post_type; ?>" <?php checked(in_array($post_type, $checked_post_types)); ?> /> <label for="post_type_<?php echo $post_type; ?>"><?php echo $post_type; ?></label></div><?php
 		}
 	}
 	else
 		echo '<p>'.__('No public custom post types found.').'</p>';
 }
 
+function super_sticky_filter($query_type) {
+	$filters = get_option('sticky_custom_post_types_filters');
+	if(!is_array($filters)) $filters = array();
+		return in_array($query_type, $filters);
+}
+
+function super_sticky_set_filters() { ?>
+	<span><input type="checkbox" id="sticky_custom_post_types_filters_home" name="sticky_custom_post_types_filters[]" value="home" <?php checked(super_sticky_filter('home')); ?> /> <label for="sticky_custom_post_types_filters_home">home page</label></span><?php
+}
+
 function super_sticky_admin_init() {
-	register_setting('writing', 'sticky_custom_post_types');
-	add_settings_section('super_sticky_options', 'Sticky Custom Post Types', 'super_sticky_description', 'writing');
-	add_settings_field('sticky_custom_post_types', 'Custom Post Types', 'super_sticky_settings', 'writing', 'super_sticky_options');
+	register_setting('reading', 'sticky_custom_post_types');
+	register_setting('reading', 'sticky_custom_post_types_filters');
+	add_settings_section('super_sticky_options', 'Sticky Custom Post Types', 'super_sticky_description', 'reading');
+	add_settings_field('sticky_custom_post_types', 'Show "Stick this..." checkbox on', 'super_sticky_set_post_types', 'reading', 'super_sticky_options');
+	add_settings_field('sticky_custom_post_types_filters', 'Display selected post type(s) on', 'super_sticky_set_filters', 'reading', 'super_sticky_options');
 }
 
 add_action('admin_init', 'super_sticky_admin_init', 20);
 
-function super_sticky_get($posts=FALSE) {
+function super_sticky_post_types($posts=false) {
 	$post_types = get_option('sticky_custom_post_types');
 	if(!is_array($post_types))
 		$post_types = array();
@@ -58,23 +70,26 @@ function super_sticky_get($posts=FALSE) {
 	return $post_types;
 }
 
-function super_sticky_meta() { ?>
+function super_sticky_meta() { global $post; ?>
 	<input id="super-sticky" name="sticky" type="checkbox" value="sticky" <?php checked(is_sticky($post->ID)); ?> /> <label for="super-sticky" class="selectit"><?php _e('Stick this to the front page') ?></label><?php
 }
 
 function super_sticky_add_meta_box() {
-	foreach(super_sticky_get() as $post_type)
+	foreach(super_sticky_post_types() as $post_type)
 		if(current_user_can('edit_others_posts'))
 			add_meta_box('super_sticky_meta', 'Sticky', 'super_sticky_meta', $post_type, 'side', 'high');
 }
 
 add_action('admin_init', 'super_sticky_add_meta_box');
 
-function super_sticky_posts($query) {
-	if(is_home() && (false === $query->query_vars['suppress_filters']))
-		$query->set('post_type', super_sticky_get(TRUE));
+function super_sticky_posts_filter($query) {
+	if($query->is_home && !$query->is_paged)
+		if(super_sticky_filter('home'))
+			$query->set('post_type', super_sticky_post_types(true));
+		else
+			$query->set('post_type', 'post');
 	return $query;
 }
 
-add_filter('pre_get_posts', 'super_sticky_posts');
+add_filter('pre_get_posts', 'super_sticky_posts_filter');
 ?>
