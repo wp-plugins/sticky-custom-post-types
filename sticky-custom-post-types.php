@@ -3,7 +3,7 @@
 Plugin Name: Sticky Custom Post Types
 Plugin URI: http://superann.com/sticky-custom-post-types/
 Description: Enables support for sticky custom post types. Set options in Settings &rarr; Reading.
-Version: 1.2
+Version: 1.2.1
 Author: Ann Oyama
 Author URI: http://superann.com
 License: GPL2
@@ -83,7 +83,7 @@ function super_sticky_add_meta_box() {
 add_action('admin_init', 'super_sticky_add_meta_box');
 
 function super_sticky_posts_filter($query) {
-	if($query->is_home && !$query->is_paged)
+	if($query->is_home && !$query->is_paged && !$query->get('suppress_filters'))
 		if(super_sticky_filter('home'))
 			$query->set('post_type', super_sticky_post_types(true));
 		else

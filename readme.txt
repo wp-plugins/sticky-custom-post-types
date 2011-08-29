@@ -14,7 +14,7 @@ This plugin adds a "Stick this to the front page" checkbox on the admin add/edit
 
 Set options to enable in Settings → Reading. Unless you're using custom queries to display your sticky posts, you probably want to check the option to add selected post types to the blog home.
 
-Note: Sticky custom posts are stored in the global 'sticky_posts' option field, just like regular sticky posts.
+Note: Sticky custom posts are stored in the global 'sticky_posts' option field, just like regular posts.
 
 == Installation ==
 
@@ -31,6 +31,9 @@ None.
 None.
 
 == Changelog ==
+
+= 1.2.1 =
+* Fixed filter method (only applies when suppress_filters is false).
 
 = 1.2 =
 * Modified filter method to control display of selected custom post types on the blog home, and added an option to allow the user to enable/disable the filter.
