@@ -32,6 +32,9 @@ None.
 
 == Changelog ==
 
+= 1.2.2 =
+* Added custom post types to paged blog home.
+
 = 1.2.1 =
 * Fixed filter method (only applies when suppress_filters is false).
 
