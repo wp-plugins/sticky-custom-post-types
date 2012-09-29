@@ -3,8 +3,10 @@ Contributors: superann
 Donate link: http://superann.com/donate/?id=WP+Sticky+Custom+Post+Types+plugin
 Tags: custom post types, sticky
 Requires at least: 3.0
-Tested up to: 3.2.1
+Tested up to: 3.4.2
 Stable tag: trunk
+License: GPLv2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 Enables support for sticky custom post types.
 
@@ -32,6 +34,10 @@ None.
 
 == Changelog ==
 
+= 1.2.3 =
+* Added contributions by [Viper007Bond](http://www.viper007bond.com) including enhanced posts filter (now affects main query only and will respect other post types) and formatting updates to conform with the official WordPress Coding Standards doc in the codex.
+* Home query no longer modified at all if "Display selected post type(s) on home page" option is left unchecked (note that this means that checked sticky custom posts will show up in the home feed but non-sticky custom posts will be left out of the normal flow).
+
 = 1.2.2 =
 * Added custom post types to paged blog home.
 
@@ -47,3 +53,8 @@ None.
 
 = 1.0 =
 * Initial version.
+
+== Upgrade Notice ==
+
+= 1.2.3 =
+Activating the posts filter function on home now affects main query only and respects other post types, which should make it play more nicely with other plugins.
